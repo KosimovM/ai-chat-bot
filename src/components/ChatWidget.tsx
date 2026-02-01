@@ -7,7 +7,6 @@ import { Button } from '@/components/Button';
 import { Send, MessageCircle, X, Minimize2, Maximize2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { cn } from '@/lib/utils';
-import { cn } from '@/lib/utils';
 
 interface ChatInputForm {
     message: string;

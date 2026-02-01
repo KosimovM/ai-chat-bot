@@ -6,19 +6,18 @@ import { ChatMessage } from '@/components/ChatMessage';
 import { Button } from '@/components/Button';
 import { Send, Plus, MessageSquare } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { cn } from '@/lib/utils'; // Assuming cn utility exists
+import { cn } from '@/lib/utils';
 
 interface ChatInputForm {
     message: string;
 }
 
 export default function ChatsPage() {
-    const { conversations, activeConversationId, setActiveConversation, sendMessage, addConversation, isTyping } = useChatStore();
+    const { conversations, activeConversationId, setActiveConversation, sendMessage, addConversation, isTyping, error } = useChatStore();
     const activeConversation = conversations.find((c) => c.id === activeConversationId);
     const { register, handleSubmit, reset } = useForm<ChatInputForm>();
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-    // Auto-scroll to bottom
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -27,13 +26,11 @@ export default function ChatsPage() {
         scrollToBottom();
     }, [activeConversation?.messages, isTyping]);
 
-    // Set initial active conversation if none
     React.useEffect(() => {
         if (!activeConversationId && conversations.length > 0) {
             setActiveConversation(conversations[0].id);
         }
     }, [activeConversationId, conversations, setActiveConversation]);
-
 
     const onSubmit = async (data: ChatInputForm) => {
         if (!activeConversationId) return;
@@ -119,17 +116,24 @@ export default function ChatsPage() {
                         </div>
 
                         <div className="p-4 border-t bg-gray-50">
-                            <form onSubmit={handleSubmit(onSubmit)} className="flex gap-4">
-                                <input
-                                    {...register('message')}
-                                    className="flex-1 rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-slate-900"
-                                    placeholder="Type your message..."
-                                    autoComplete="off"
-                                />
-                                <Button type="submit" disabled={isTyping}>
-                                    <Send className="h-4 w-4 mr-2" />
-                                    Send
-                                </Button>
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+                                {error && (
+                                    <div className="text-xs text-red-500 bg-red-50 p-2 rounded">
+                                        {error}
+                                    </div>
+                                )}
+                                <div className="flex gap-4 w-full">
+                                    <input
+                                        {...register('message')}
+                                        className="flex-1 rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-slate-900"
+                                        placeholder="Type your message..."
+                                        autoComplete="off"
+                                    />
+                                    <Button type="submit" disabled={isTyping}>
+                                        <Send className="h-4 w-4 mr-2" />
+                                        Send
+                                    </Button>
+                                </div>
                             </form>
                         </div>
                     </>

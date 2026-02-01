@@ -18,13 +18,7 @@ interface ChatState {
     clearError: () => void;
 }
 
-// ... (Mock Data omitted, assumes no change needed there for this block if targeting interface/sendMessage)
-// Actually I need to be careful with replace_file_content target context. 
-// Let's target the interface and the create call separately or use specific blocks.
-
-// Block 1: Interface update
-
-// Mock Data (Kept for initial state)
+// Mock Data
 const MOCK_USER: User = {
     id: 'user-1',
     name: 'Alex Johnson',
@@ -64,21 +58,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
     conversations: MOCK_CONVERSATIONS,
     activeConversationId: null,
     isTyping: false,
+    error: null,
 
-    login: (user) => set({ currentUser: user }),
-    logout: () => set({ currentUser: null, activeConversationId: null }),
+    login: (user) => set({ currentUser: user, error: null }),
+    logout: () => set({ currentUser: null, activeConversationId: null, error: null }),
 
-    setActiveConversation: (id) => set({ activeConversationId: id }),
+    setActiveConversation: (id) => set({ activeConversationId: id, error: null }),
+    clearError: () => set({ error: null }),
 
     sendMessage: async (content) => {
-        const { activeConversationId, currentUser, conversations } = get();
+        const { activeConversationId, currentUser } = get();
         if (!activeConversationId || !currentUser) return;
 
-        // 1. Optimistic / User Message
-        // Real app: call API first, then update UI. MVP: UI first (optimistic) or Service first.
-        // Let's call service to get the "created" message object (mocking backend ID generation)
+        set({ error: null });
 
         try {
+            // Optimistic update? Or wait for service? 
+            // Creating message locally for immediate feedback is better UX usually, but
+            // for now sticking to "Service driven" to prove separation. 
+            // The service returns the user message object (simulating backend creation).
             const userMsg = await ChatService.sendMessage(activeConversationId, content, currentUser.id);
 
             set((state) => ({
@@ -92,11 +90,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
                     }
                     return c;
                 }),
-                isTyping: true, // Start showing typing indicator
+                isTyping: true,
             }));
 
-            // 2. Get AI Response
-            const aiMsg = await ChatService.getAiResponse(activeConversationId, content);
+            // Get Updated History
+            const currentConversations = get().conversations;
+            const activeConv = currentConversations.find(c => c.id === activeConversationId);
+            const history = activeConv ? activeConv.messages : [];
+
+            // Pass history to service
+            const aiMsg = await ChatService.getAiResponse(activeConversationId, content, history);
 
             set((state) => ({
                 conversations: state.conversations.map((c) => {
@@ -109,12 +112,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
                     }
                     return c;
                 }),
-                isTyping: false, // Stop showing typing indicator
+                isTyping: false,
             }));
         } catch (error) {
             console.error('Failed to send message', error);
-            set({ isTyping: false });
-            // Handle error state later
+            set({ isTyping: false, error: 'Failed to send message. Please try again.' });
         }
     },
 
@@ -126,11 +128,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
             const newConv = await ChatService.createConversation(currentUser.id);
             set(state => ({
                 conversations: [newConv, ...state.conversations],
-                activeConversationId: newConv.id
+                activeConversationId: newConv.id,
+                error: null
             }));
             return newConv.id;
         } catch (error) {
             console.error(error);
+            set({ error: 'Failed to create conversation.' });
             return '';
         }
     }

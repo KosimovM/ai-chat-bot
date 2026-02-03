@@ -27,7 +27,6 @@ export default function RegisterPage() {
             email: data.email,
             avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`
         });
-
         router.push('/dashboard/chats');
     };
 

@@ -11,13 +11,13 @@ export interface Message {
     senderId: string;
     role: 'user' | 'assistant';
     content: string;
-    createdAt: string; // ISO string
+    createdAt: string;
 }
 
 export interface Conversation {
     id: string;
     userId: string;
     title: string;
-    lastMessageAt: string; // ISO string
+    lastMessageAt: string; 
     messages: Message[];
 }

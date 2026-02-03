@@ -9,7 +9,6 @@ interface ChatState {
     isTyping: boolean;
     error: string | null;
 
-    // Actions
     login: (user: User) => void;
     logout: () => void;
     setActiveConversation: (id: string) => void;
@@ -18,7 +17,6 @@ interface ChatState {
     clearError: () => void;
 }
 
-// Mock Data
 const MOCK_USER: User = {
     id: 'user-1',
     name: 'Alex Johnson',
@@ -73,11 +71,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         set({ error: null });
 
         try {
-            // Optimistic update? Or wait for service? 
-            // Creating message locally for immediate feedback is better UX usually, but
-            // for now sticking to "Service driven" to prove separation. 
-            // The service returns the user message object (simulating backend creation).
-            const userMsg = await ChatService.sendMessage(activeConversationId, content, currentUser.id);
+           const userMsg = await ChatService.sendMessage(activeConversationId, content, currentUser.id);
 
             set((state) => ({
                 conversations: state.conversations.map((c) => {
@@ -93,12 +87,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 isTyping: true,
             }));
 
-            // Get Updated History
             const currentConversations = get().conversations;
             const activeConv = currentConversations.find(c => c.id === activeConversationId);
             const history = activeConv ? activeConv.messages : [];
 
-            // Pass history to service
             const aiMsg = await ChatService.getAiResponse(activeConversationId, content, history);
 
             set((state) => ({

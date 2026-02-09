@@ -2,45 +2,50 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { LayoutDashboard, MessageSquare, Settings, LogOut } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { LayoutDashboard, MessageSquare, UserCog, LogOut, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useChatStore } from '@/store/useChatStore';
+import { useAuthStore } from '@/store/useAuthStore';
+import { Button } from '@/components/Button';
 
 const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/dashboard/chats', label: 'Chats', icon: MessageSquare },
-    // { href: '/dashboard/settings', label: 'Settings', icon: Settings }, // Not in scope for MVP 50? "Settings" mentioned in Sidebar list
+    { href: '/profile', label: 'Profile', icon: UserCog },
 ];
 
 export function Sidebar() {
     const pathname = usePathname();
-    // We can use mock logout function from store if implemented, or just link to auth
-    const logout = useChatStore(state => state.logout);
+    const router = useRouter();
+    const logout = useAuthStore(state => state.logout);
+
+    const handleLogout = () => {
+        logout();
+        router.push('/auth/login');
+    };
 
     return (
-        <aside className="fixed inset-y-0 left-0 w-64 border-r bg-white p-6 flex flex-col">
-            <div className="flex items-center gap-2 px-2 mb-8">
-                <div className="h-8 w-8 rounded-lg bg-slate-900 flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">AI</span>
+        <aside className="fixed inset-y-0 left-0 w-64 border-r bg-card/50 backdrop-blur-xl p-6 flex flex-col z-50">
+            <div className="flex items-center gap-3 px-2 mb-10">
+                <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+                    <span className="text-primary-foreground font-bold text-lg">AI</span>
                 </div>
-                <span className="text-lg font-bold text-slate-900">SupportBot</span>
+                <span className="text-xl font-bold tracking-tight">SupportBot</span>
             </div>
 
-            <nav className="space-y-1 flex-1">
+            <nav className="space-y-1.5 flex-1">
                 {navItems.map((item) => {
                     const Icon = item.icon;
-                    const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+                    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
                                 isActive
-                                    ? 'bg-slate-100 text-slate-900'
-                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                                    ? 'bg-primary text-primary-foreground shadow-md'
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                             )}
                         >
                             <Icon className="h-5 w-5" />
@@ -48,29 +53,17 @@ export function Sidebar() {
                         </Link>
                     );
                 })}
-                {/* Settings - adding conceptually even if page doesn't exist */}
-                <Link
-                    href="/dashboard/settings"
-                    className={cn(
-                        'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-                    )}
-                >
-                    <Settings className="h-5 w-5" />
-                    Settings
-                </Link>
             </nav>
 
-            <button
-                onClick={() => {
-                    logout();
-                    // In a real app, router.push('/auth/login')
-                    window.location.href = '/auth/login';
-                }}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors mt-auto"
+            <Button
+                variant="ghost"
+                onClick={handleLogout}
+                className="justify-start gap-3 mt-auto text-muted-foreground hover:text-destructive hover:bg-destructive/10"
             >
                 <LogOut className="h-5 w-5" />
                 Logout
-            </button>
+            </Button>
         </aside>
     );
 }
+

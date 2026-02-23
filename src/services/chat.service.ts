@@ -7,6 +7,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const ChatService = {
     async sendMessage(conversationId: string, content: string, senderId: string): Promise<Message> {
 
+
         // 1. Create User Message (Optimistic)
         const userMessage: Message = {
             id: `msg-${Date.now()}`, // Temporary ID

@@ -4,11 +4,11 @@ import * as React from 'react';
 import Link from 'next/link';
 import { MessageSquare, ArrowRight, Zap, Users, BarChart3, Star } from 'lucide-react';
 import { Button } from '@/components/Button';
-import { useChatStore } from '@/store/useChatStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 
 export default function DashboardPage() {
-    const currentUser = useChatStore((state) => state.currentUser);
+    const user = useAuthStore((state) => state.user);
 
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -19,7 +19,7 @@ export default function DashboardPage() {
                 
                 <div className="relative z-10 max-w-2xl">
                     <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
-                        Welcome back, <span className="text-primary-foreground underline decoration-primary/40 underline-offset-8">{currentUser?.name || 'Explorer'}</span>!
+                        Welcome back, <span className="text-primary-foreground underline decoration-primary/40 underline-offset-8">{user?.name || 'Explorer'}</span>!
                     </h1>
                     <p className="text-slate-400 text-lg sm:text-xl font-medium mb-8 leading-relaxed">
                         Your AI-powered assistant is ready to help. Check your recent conversations or start a new quest today.

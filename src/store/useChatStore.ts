@@ -1,28 +1,19 @@
 import { create } from 'zustand';
 import { Conversation, Message, User } from '@/types/chat';
 import { ChatService } from '@/services/chat.service';
+import { useAuthStore } from './useAuthStore';
 
 interface ChatState {
-    currentUser: User | null;
     conversations: Conversation[];
     activeConversationId: string | null;
     isTyping: boolean;
     error: string | null;
 
-    login: (user: User) => void;
-    logout: () => void;
     setActiveConversation: (id: string) => void;
     sendMessage: (content: string) => Promise<void>;
     addConversation: () => Promise<string>;
     clearError: () => void;
 }
-
-const MOCK_USER: User = {
-    id: 'user-1',
-    name: 'Alex Johnson',
-    email: 'alex@example.com',
-    avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
-};
 
 const MOCK_CONVERSATIONS: Conversation[] = [
     {
@@ -52,21 +43,22 @@ const MOCK_CONVERSATIONS: Conversation[] = [
 ];
 
 export const useChatStore = create<ChatState>((set, get) => ({
-    currentUser: MOCK_USER,
     conversations: MOCK_CONVERSATIONS,
     activeConversationId: null,
     isTyping: false,
     error: null,
 
-    login: (user) => set({ currentUser: user, error: null }),
-    logout: () => set({ currentUser: null, activeConversationId: null, error: null }),
-
     setActiveConversation: (id) => set({ activeConversationId: id, error: null }),
     clearError: () => set({ error: null }),
 
     sendMessage: async (content) => {
-        const { activeConversationId, currentUser } = get();
-        if (!activeConversationId || !currentUser) return;
+        const { activeConversationId } = get();
+        const currentUser = useAuthStore.getState().user;
+        
+        if (!activeConversationId || !currentUser) {
+            set({ error: 'You must be logged in to send messages.' });
+            return;
+        }
 
         set({ error: null });
 
@@ -113,7 +105,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     },
 
     addConversation: async () => {
-        const { currentUser } = get();
+        const currentUser = useAuthStore.getState().user;
         if (!currentUser) return '';
 
         try {

@@ -1,4 +1,6 @@
-import { Controller, Post, Body, UseGuards, Request, Headers, RawBodyRequest } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Headers } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
+import type { Request as ExpressRequest } from 'express';
 import { BillingService } from './billing.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -15,8 +17,8 @@ export class BillingController {
   @Post('webhook')
   async handleWebhook(
     @Headers('stripe-signature') signature: string,
-    @Request() req: RawBodyRequest<Request>,
+    @Request() req: RawBodyRequest<ExpressRequest>,
   ) {
-    return this.billingService.handleWebhook(signature, (req as any).rawBody);
+    return this.billingService.handleWebhook(signature, req.rawBody);
   }
 }

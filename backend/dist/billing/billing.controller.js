@@ -25,6 +25,8 @@ let BillingController = class BillingController {
         return this.billingService.createCheckout(req.user.userId, plan);
     }
     async handleWebhook(signature, req) {
+        if (!req.rawBody)
+            throw new common_1.BadRequestException('No raw body');
         return this.billingService.handleWebhook(signature, req.rawBody);
     }
 };

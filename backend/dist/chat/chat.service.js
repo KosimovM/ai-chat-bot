@@ -54,7 +54,7 @@ let ChatService = class ChatService {
             where: { id: chatId },
             include: { user: { include: { subscription: true } } },
         });
-        if (!chat || chat.userId !== userId) {
+        if (!chat || chat.userId !== userId || !chat.user) {
             throw new common_1.ForbiddenException('Access denied');
         }
         const messageCount = await this.prisma.message.count({
@@ -65,7 +65,7 @@ let ChatService = class ChatService {
         if (messageCount >= limit) {
             throw new common_1.ForbiddenException('Message limit reached for your plan. Please upgrade.');
         }
-        const userMessage = await this.prisma.message.create({
+        await this.prisma.message.create({
             data: {
                 conversationId: chatId,
                 role: 'user',
@@ -90,7 +90,7 @@ let ChatService = class ChatService {
             data: {
                 conversationId: chatId,
                 role: 'assistant',
-                content: aiResponse,
+                content: aiResponse || 'I am sorry, but I cannot respond at the moment.',
             },
         });
         return assistantMessage;

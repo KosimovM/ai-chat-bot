@@ -16,7 +16,7 @@ export class BillingService {
       throw new Error('STRIPE_SECRET_KEY is not defined');
     }
     this.stripe = new Stripe(stripeKey, {
-      apiVersion: '2025-02-24-preview',
+      apiVersion: '2024-12-18.acacia' as any,
     });
   }
 

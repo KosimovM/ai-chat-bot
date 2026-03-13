@@ -14,7 +14,8 @@ let AiModule = class AiModule {
 exports.AiModule = AiModule;
 exports.AiModule = AiModule = __decorate([
     (0, common_1.Module)({
-        providers: [ai_service_1.AiService]
+        providers: [ai_service_1.AiService],
+        exports: [ai_service_1.AiService],
     })
 ], AiModule);
 //# sourceMappingURL=ai.module.js.map

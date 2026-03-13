@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Request, Headers } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Headers, BadRequestException } from '@nestjs/common';
 import type { RawBodyRequest } from '@nestjs/common';
 import type { Request as ExpressRequest } from 'express';
 import { BillingService } from './billing.service';
@@ -19,6 +19,7 @@ export class BillingController {
     @Headers('stripe-signature') signature: string,
     @Request() req: RawBodyRequest<ExpressRequest>,
   ) {
+    if (!req.rawBody) throw new BadRequestException('No raw body');
     return this.billingService.handleWebhook(signature, req.rawBody);
   }
 }

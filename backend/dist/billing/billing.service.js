@@ -29,7 +29,7 @@ let BillingService = class BillingService {
             throw new Error('STRIPE_SECRET_KEY is not defined');
         }
         this.stripe = new stripe_1.default(stripeKey, {
-            apiVersion: '2025-02-24-preview',
+            apiVersion: '2024-12-18.acacia',
         });
     }
     async createCheckout(userId, plan) {

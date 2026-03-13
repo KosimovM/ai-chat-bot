@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useChatStore } from '../store/useChatStore';
 import { ChatMessage } from './ChatMessage';
 import { Button } from './Button';
-import { Send, MessageCircle, X, Sparkles, Minus, Maximize2 } from 'lucide-react';
+import { Send, MessageCircle, X, Sparkles, Minus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -101,7 +101,7 @@ export function ChatWidget() {
                         <div className="flex-1 overflow-y-auto p-6 space-y-2 bg-slate-50/50 custom-scrollbar">
                             {activeConversation ? (
                                 <>
-                                    {activeConversation.messages.length === 0 && (
+                                    {(!activeConversation.messages || activeConversation.messages.length === 0) && (
                                         <div className="flex flex-col items-center justify-center h-full text-center space-y-4 px-6 animate-in fade-in zoom-in duration-500">
                                             <div className="h-16 w-16 rounded-[2rem] bg-primary/5 flex items-center justify-center text-primary mb-2">
                                                 <MessageCircle className="h-8 w-8" />
@@ -112,7 +112,7 @@ export function ChatWidget() {
                                             </p>
                                         </div>
                                     )}
-                                    {activeConversation.messages.map((msg) => (
+                                    {activeConversation.messages?.map((msg) => (
                                         <ChatMessage key={msg.id} message={msg} />
                                     ))}
                                     {isTyping && (

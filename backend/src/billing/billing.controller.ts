@@ -19,7 +19,8 @@ export class BillingController {
     @Headers('stripe-signature') signature: string,
     @Request() req: RawBodyRequest<ExpressRequest>,
   ) {
-    if (!req.rawBody) throw new BadRequestException('No raw body');
-    return this.billingService.handleWebhook(signature, req.rawBody);
+    const body = req.rawBody;
+    if (!body) throw new BadRequestException('No raw body');
+    return this.billingService.handleWebhook(signature, body as Buffer);
   }
 }

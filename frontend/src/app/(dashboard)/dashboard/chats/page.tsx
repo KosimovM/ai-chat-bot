@@ -53,13 +53,13 @@ export default function ChatsPage() {
                     </div>
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <input
-                            placeholder="Search chats..."
+                        <input 
+                            placeholder="Search chats..." 
                             className="w-full bg-muted/50 border-none rounded-xl py-2 pl-9 pr-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                         />
                     </div>
                 </div>
-
+                
                 <div className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar">
                     {conversations.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-40 text-center px-4">
@@ -75,8 +75,8 @@ export default function ChatsPage() {
                                 onClick={() => setActiveConversation(conv.id)}
                                 className={cn(
                                     "w-full text-left p-4 rounded-2xl text-sm transition-all duration-200 flex items-start gap-3 group",
-                                    activeConversationId === conv.id
-                                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]"
+                                    activeConversationId === conv.id 
+                                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
                                         : "hover:bg-muted text-muted-foreground hover:text-foreground"
                                 )}
                             >
@@ -92,11 +92,11 @@ export default function ChatsPage() {
                                             {conv.title}
                                         </p>
                                         <span className={cn("text-[10px] whitespace-nowrap opacity-70", activeConversationId === conv.id ? "text-white" : "")}>
-                                            12:45 PM
+                                            {new Date(conv.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                     </div>
                                     <p className={cn("text-xs truncate italic opacity-80", activeConversationId === conv.id ? "text-white/90" : "text-muted-foreground")}>
-                                        {conv.messages[conv.messages.length - 1]?.content || "Started a new conversation..."}
+                                        {conv.messages && conv.messages.length > 0 ? conv.messages[conv.messages.length - 1].content : "Started a new conversation..."}
                                     </p>
                                 </div>
                             </button>
@@ -130,7 +130,7 @@ export default function ChatsPage() {
 
                         {/* Messages List */}
                         <div className="flex-1 overflow-y-auto p-6 space-y-2 custom-scrollbar bg-muted/20">
-                            {activeConversation.messages.map((msg) => (
+                            {activeConversation.messages?.map((msg) => (
                                 <ChatMessage key={msg.id} message={msg} />
                             ))}
                             {isTyping && (
@@ -165,9 +165,9 @@ export default function ChatsPage() {
                                         autoComplete="off"
                                         disabled={isTyping}
                                     />
-                                    <Button
-                                        type="submit"
-                                        disabled={isTyping}
+                                    <Button 
+                                        type="submit" 
+                                        disabled={isTyping} 
                                         size="icon"
                                         className={cn(
                                             "h-10 w-10 rounded-xl transition-all duration-300 shadow-md",
@@ -192,9 +192,9 @@ export default function ChatsPage() {
                         <p className="text-muted-foreground max-w-sm mb-10 font-medium leading-relaxed">
                             Select a conversation from the left or start a fresh new journey with our assistant.
                         </p>
-                        <Button
-                            onClick={() => addConversation()}
-                            size="lg"
+                        <Button 
+                            onClick={() => addConversation()} 
+                            size="lg" 
                             className="rounded-2xl h-14 px-10 text-base font-bold shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 active:scale-95 transition-all"
                         >
                             <Plus className="mr-2 h-5 w-5" /> Start New Chat

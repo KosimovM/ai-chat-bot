@@ -1,26 +1,10 @@
 import { create } from 'zustand';
 import api from '../lib/api';
-
-export interface Message {
-    id: string;
-    conversationId: string;
-    role: 'user' | 'assistant';
-    content: string;
-    createdAt: string;
-}
-
-export interface Conversation {
-    id: string;
-    userId: string;
-    createdAt: string;
-    updatedAt: string;
-    messages?: Message[];
-}
+import { Message, Conversation } from '../types/chat';
 
 interface ChatState {
     conversations: Conversation[];
     activeConversationId: string | null;
-    messages: Record<string, Message[]>;
     isLoading: boolean;
     isTyping: boolean;
     error: string | null;
@@ -29,14 +13,13 @@ interface ChatState {
     fetchMessages: (chatId: string) => Promise<void>;
     setActiveConversation: (id: string) => void;
     sendMessage: (content: string) => Promise<void>;
-    createConversation: () => Promise<string>;
+    addConversation: () => Promise<string>;
     clearError: () => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
     conversations: [],
     activeConversationId: null,
-    messages: {},
     isLoading: false,
     isTyping: false,
     error: null,
@@ -45,7 +28,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
         set({ isLoading: true });
         try {
             const response = await api.get('/chats');
-            set({ conversations: response.data, isLoading: false });
+            // Ensure messages is always an array
+            const conversations = response.data.map((c: any) => ({
+                ...c,
+                title: c.title || `Chat ${c.id.substring(0, 4)}`,
+                messages: c.messages || []
+            }));
+            set({ conversations, isLoading: false });
         } catch (error: any) {
             set({ error: 'Failed to fetch conversations', isLoading: false });
         }
@@ -56,7 +45,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
         try {
             const response = await api.get(`/chats/${chatId}/messages`);
             set((state) => ({
-                messages: { ...state.messages, [chatId]: response.data },
+                conversations: state.conversations.map(c => 
+                    c.id === chatId ? { ...c, messages: response.data } : c
+                ),
                 isLoading: false,
             }));
         } catch (error: any) {
@@ -66,7 +57,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     setActiveConversation: (id) => {
         set({ activeConversationId: id, error: null });
-        if (!get().messages[id]) {
+        const conv = get().conversations.find(c => c.id === id);
+        if (conv && (!conv.messages || conv.messages.length === 0)) {
             get().fetchMessages(id);
         }
     },
@@ -88,10 +80,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
         // Optimistic update
         set((state) => ({
-            messages: {
-                ...state.messages,
-                [activeConversationId]: [...(state.messages[activeConversationId] || []), userMsg],
-            },
+            conversations: state.conversations.map(c => 
+                c.id === activeConversationId ? { ...c, messages: [...c.messages, userMsg] } : c
+            ),
             isTyping: true,
             error: null,
         }));
@@ -101,10 +92,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
             const assistantMsg = response.data;
 
             set((state) => ({
-                messages: {
-                    ...state.messages,
-                    [activeConversationId]: [...(state.messages[activeConversationId] || []), assistantMsg],
-                },
+                conversations: state.conversations.map(c => 
+                    c.id === activeConversationId 
+                        ? { ...c, messages: [...c.messages.filter(m => m.id !== tempId), userMsg, assistantMsg] } 
+                        : c
+                ),
                 isTyping: false,
             }));
         } catch (error: any) {
@@ -115,11 +107,15 @@ export const useChatStore = create<ChatState>((set, get) => ({
         }
     },
 
-    createConversation: async () => {
+    addConversation: async () => {
         set({ isLoading: true });
         try {
             const response = await api.post('/chats');
-            const newConv = response.data;
+            const newConv = {
+                ...response.data,
+                title: response.data.title || 'New Conversation',
+                messages: []
+            };
             set((state) => ({
                 conversations: [newConv, ...state.conversations],
                 activeConversationId: newConv.id,

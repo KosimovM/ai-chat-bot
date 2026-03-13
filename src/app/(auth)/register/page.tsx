@@ -16,8 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
-import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User, Github, Chrome, Sparkles } from "lucide-react";
 
 type RegisterFormValues = {
     name: string;
@@ -32,10 +31,10 @@ export default function RegisterPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const onSubmit = async (data: RegisterFormValues) => {
         setIsLoading(true);
+        // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1500));
         login({ id: "1", name: data.name, email: data.email });
         router.push("/dashboard/chats");
@@ -43,129 +42,127 @@ export default function RegisterPage() {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-            <Card className="w-[380px] shadow-xl backdrop-blur-md bg-card/80 border-white/20 dark:border-white/10 dark:bg-card/50">
-                <CardHeader className="space-y-1 text-center">
-                    <CardTitle className="text-2xl font-bold tracking-tight">Create an account</CardTitle>
-                    <CardDescription>
-                        Enter your details below to create your account
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="grid gap-4">
-                            <div className="grid gap-2">
-                                <label className="text-sm font-medium leading-none">Full Name</label>
+        <div className="min-h-screen w-full flex items-center justify-center p-4 bg-slate-50 relative overflow-hidden">
+            {/* Background Decorations */}
+            <div className="absolute top-0 right-0 -mt-24 -mr-24 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
+            <div className="absolute bottom-0 left-0 -mb-24 -ml-24 h-96 w-96 rounded-full bg-indigo-500/5 blur-3xl" />
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="w-full max-w-md relative z-10"
+            >
+                <div className="text-center mb-8">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 shadow-xl shadow-slate-900/20 mb-4 transform rotate-6">
+                        <Sparkles className="text-white h-6 w-6" />
+                    </div>
+                    <h1 className="text-3xl font-black tracking-tighter text-slate-900">Start Your Journey</h1>
+                    <p className="text-muted-foreground font-medium mt-2">Create your professional AI workspace</p>
+                </div>
+
+                <Card className="border-none shadow-2xl shadow-black/5 bg-white/80 backdrop-blur-xl">
+                    <CardHeader className="space-y-1 pb-4">
+                        <CardTitle className="text-xl font-bold">Create Account</CardTitle>
+                        <CardDescription>
+                            Join thousands of teams building with Antigravity
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                            <div className="space-y-4">
                                 <div className="relative">
-                                    <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <User className="absolute left-3.5 top-11 h-4 w-4 text-muted-foreground z-10" />
                                     <Input
-                                        {...register("name", { required: "Name is required" })}
+                                        label="Full Name"
                                         placeholder="John Doe"
-                                        className={errors.name ? "pl-9 border-destructive animate-[shake_0.18s_ease-in-out]" : "pl-9"}
+                                        error={errors.name?.message}
+                                        {...register("name", { required: "Name is required" })}
+                                        className="pl-10 rounded-2xl"
                                     />
                                 </div>
-                                {errors.name && (
-                                    <p className="text-xs text-destructive">
-                                        {errors.name.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <label className="text-sm font-medium leading-none">Email</label>
                                 <div className="relative">
-                                    <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <Mail className="absolute left-3.5 top-11 h-4 w-4 text-muted-foreground z-10" />
                                     <Input
+                                        label="Email Address"
                                         type="email"
-                                        {...register("email", { required: "Email is required" })}
                                         placeholder="name@example.com"
-                                        className={errors.email ? "pl-9 border-destructive animate-[shake_0.18s_ease-in-out]" : "pl-9"}
+                                        error={errors.email?.message}
+                                        {...register("email", { required: "Email is required" })}
+                                        className="pl-10 rounded-2xl"
                                     />
                                 </div>
-                                {errors.email && (
-                                    <p className="text-xs text-destructive">
-                                        {errors.email.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <label className="text-sm font-medium leading-none">Password</label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <Lock className="absolute left-3.5 top-11 h-4 w-4 text-muted-foreground z-10" />
                                     <Input
+                                        label="Password"
                                         type={showPassword ? "text" : "password"}
-                                        autoComplete="new-password"
+                                        placeholder="••••••••"
+                                        error={errors.password?.message}
                                         {...register("password", {
                                             required: "Password is required",
-                                            minLength: {
-                                                value: 6,
-                                                message: "Password must be at least 6 characters",
-                                            },
+                                            minLength: { value: 6, message: "At least 6 characters" }
                                         })}
-                                        className={errors.password ? "pl-9 pr-10 border-destructive animate-[shake_0.18s_ease-in-out]" : "pl-9 pr-10"}
+                                        className="pl-10 rounded-2xl"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword((prev) => !prev)}
-                                        className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
-                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        className="absolute right-3 top-11 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                     </button>
                                 </div>
-                                {errors.password && (
-                                    <p className="text-xs text-destructive">
-                                        {errors.password.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <label className="text-sm font-medium leading-none">Confirm Password</label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <Lock className="absolute left-3.5 top-11 h-4 w-4 text-muted-foreground z-10" />
                                     <Input
-                                        type={showConfirmPassword ? "text" : "password"}
-                                        autoComplete="new-password"
+                                        label="Confirm Password"
+                                        type="password"
+                                        placeholder="••••••••"
+                                        error={errors.confirmPassword?.message}
                                         {...register("confirmPassword", {
                                             required: "Please confirm your password",
-                                            validate: (value) =>
-                                                value === watch("password") || "Passwords do not match",
+                                            validate: (value) => value === watch("password") || "Passwords do not match"
                                         })}
-                                        className={errors.confirmPassword ? "pl-9 pr-10 border-destructive animate-[shake_0.18s_ease-in-out]" : "pl-9 pr-10"}
+                                        className="pl-10 rounded-2xl"
                                     />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowConfirmPassword((prev) => !prev)}
-                                        className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
-                                        aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                                    >
-                                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                    </button>
                                 </div>
-                                {errors.confirmPassword && (
-                                    <p className="text-xs text-destructive">
-                                        {errors.confirmPassword.message}
-                                    </p>
-                                )}
                             </div>
-                            <Button className="w-full mt-2" type="submit" isLoading={isLoading} size="lg">
-                                Create Account
+                            <Button className="w-full h-12 rounded-2xl font-bold shadow-lg shadow-primary/20" type="submit" isLoading={isLoading}>
+                                Get Started
+                            </Button>
+                        </form>
+
+                        <div className="relative my-6">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t border-slate-200" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase font-bold tracking-widest">
+                                <span className="bg-white px-3 text-muted-foreground">
+                                    Or Sign Up With
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <Button variant="secondary" className="rounded-xl h-11 transition-all hover:bg-slate-100" type="button" disabled={isLoading}>
+                                <Github className="h-4 w-4 mr-2" /> Github
+                            </Button>
+                            <Button variant="secondary" className="rounded-xl h-11 transition-all hover:bg-slate-100" type="button" disabled={isLoading}>
+                                <Chrome className="h-4 w-4 mr-2" /> Google
                             </Button>
                         </div>
-                    </form>
-                </CardContent>
-                <CardFooter className="flex flex-col gap-2">
-                    <div className="text-sm text-center text-muted-foreground">
-                        Already have an account?{" "}
-                        <Link href="/auth/login" className="text-primary hover:underline font-medium">
-                            Sign in
-                        </Link>
-                    </div>
-                </CardFooter>
-            </Card>
-        </motion.div>
+                    </CardContent>
+                    <CardFooter className="pt-2 pb-8">
+                        <div className="text-sm text-center w-full text-muted-foreground font-medium">
+                            Already have an account?{" "}
+                            <Link href="/auth/login" className="text-primary hover:underline font-bold transition-all">
+                                Sign In
+                            </Link>
+                        </div>
+                    </CardFooter>
+                </Card>
+            </motion.div>
+        </div>
     );
 }

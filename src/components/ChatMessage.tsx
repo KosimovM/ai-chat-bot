@@ -13,38 +13,35 @@ export function ChatMessage({ message }: ChatMessageProps) {
     return (
         <div
             className={cn(
-                'flex w-full gap-4 p-4',
-                isUser ? 'flex-row-reverse' : 'flex-row',
-                isUser ? 'bg-white' : 'bg-slate-50' // Slight contrast
+                'flex w-full gap-3 mb-4',
+                isUser ? 'flex-row-reverse' : 'flex-row'
             )}
         >
             <div
                 className={cn(
-                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border',
-                    isUser ? 'bg-slate-100' : 'bg-blue-100 border-blue-200'
+                    'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 transition-transform duration-200 hover:scale-105',
+                    isUser 
+                        ? 'bg-primary/10 border-primary/20 text-primary' 
+                        : 'bg-muted border-border text-muted-foreground'
                 )}
             >
-                {isUser ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5 text-blue-600" />}
+                {isUser ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
             </div>
 
-            <div className={cn('flex flex-col max-w-[80%]', isUser ? 'items-end' : 'items-start')}>
-                <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-gray-900">
-                        {isUser ? 'You' : 'AI Assistant'}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                        {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                </div>
+            <div className={cn('flex flex-col max-w-[85%] sm:max-w-[70%]', isUser ? 'items-end' : 'items-start')}>
                 <div className={cn(
-                    'mt-1 text-sm text-gray-700 whitespace-pre-wrap',
-                    // Optional bubble styles if requested, but description said "Message user/bot visually different" which I did with alignment/icons/bg.
-                    // Let's add bubble style for better look.
-                    isUser ? 'bg-slate-900 text-white rounded-2xl rounded-tr-sm px-4 py-2' : 'bg-white border rounded-2xl rounded-tl-sm px-4 py-2 shadow-sm'
+                    'px-4 py-3 text-sm transition-all duration-200 shadow-sm',
+                    isUser 
+                        ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-none' 
+                        : 'bg-card border border-border text-foreground rounded-2xl rounded-tl-none'
                 )}>
-                    {/* Override text color for bubble */}
-                    <p className={isUser ? 'text-white' : 'text-gray-800'}>{message.content}</p>
+                    <p className="whitespace-pre-wrap leading-relaxed">
+                        {message.content}
+                    </p>
                 </div>
+                <span className="text-[11px] text-muted-foreground mt-1.5 px-1 font-medium italic">
+                    {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
             </div>
         </div>
     );

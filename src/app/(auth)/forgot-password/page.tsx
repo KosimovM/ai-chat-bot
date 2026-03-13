@@ -13,9 +13,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/Card";
-import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import { Mail } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, CheckCircle2, Mail, Sparkles } from "lucide-react";
 
 type ForgotPasswordFormValues = {
     email: string;
@@ -29,77 +28,98 @@ export default function ForgotPasswordPage() {
     const onSubmit = async (data: ForgotPasswordFormValues) => {
         setIsLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log("Reset link sent to:", data.email);
         setIsSubmitted(true);
         setIsLoading(false);
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-            <Card className="w-[380px] shadow-xl backdrop-blur-md bg-card/80 border-white/20 dark:border-white/10 dark:bg-card/50">
-                <CardHeader className="space-y-1 text-center">
-                    {isSubmitted ? (
-                        <div className="flex justify-center mb-2">
-                            <CheckCircle2 className="h-10 w-10 text-green-500" />
-                        </div>
-                    ) : null}
-                    <CardTitle className="text-2xl font-bold tracking-tight">
-                        {isSubmitted ? "Check your email" : "Reset password"}
-                    </CardTitle>
-                    <CardDescription>
-                        {isSubmitted
-                            ? "We have sent a password reset link to your email."
-                            : "Enter your email using which you signed up. We will send you a reset link."}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4">
-                    {!isSubmitted ? (
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="grid gap-4">
-                                <div className="grid gap-2">
-                                    <label className="text-sm font-medium leading-none">Email</label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                        <Input
-                                            type="email"
-                                            {...register("email", { required: "Email is required" })}
-                                            placeholder="name@example.com"
-                                            className={errors.email ? "pl-9 border-destructive animate-[shake_0.18s_ease-in-out]" : "pl-9"}
-                                        />
-                                    </div>
-                                    {errors.email && (
-                                        <p className="text-xs text-destructive">
-                                            {errors.email.message}
-                                        </p>
-                                    )}
+        <div className="min-h-screen w-full flex items-center justify-center p-4 bg-slate-50 relative overflow-hidden">
+            {/* Background Decorations */}
+            <div className="absolute top-0 left-0 -mt-24 -ml-24 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
+            <div className="absolute bottom-0 right-0 -mb-24 -mr-24 h-96 w-96 rounded-full bg-indigo-500/5 blur-3xl" />
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="w-full max-w-md relative z-10"
+            >
+                <div className="text-center mb-8">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-xl shadow-primary/20 mb-4">
+                        <Sparkles className="text-primary-foreground h-6 w-6" />
+                    </div>
+                    <h1 className="text-3xl font-black tracking-tighter text-slate-900">Reset Password</h1>
+                    <p className="text-muted-foreground font-medium mt-2">No worries, we'll help you get back in</p>
+                </div>
+
+                <Card className="border-none shadow-2xl shadow-black/5 bg-white/80 backdrop-blur-xl">
+                    <AnimatePresence mode="wait">
+                        {!isSubmitted ? (
+                            <motion.div
+                                key="form"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                            >
+                                <CardHeader className="space-y-1 pb-4">
+                                    <CardTitle className="text-xl font-bold">Forgot Password?</CardTitle>
+                                    <CardDescription>
+                                        Enter your email and we'll send you a recovery link.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                                        <div className="relative">
+                                            <Mail className="absolute left-3.5 top-11 h-4 w-4 text-muted-foreground z-10" />
+                                            <Input
+                                                label="Email Address"
+                                                type="email"
+                                                placeholder="name@example.com"
+                                                error={errors.email?.message}
+                                                {...register("email", { required: "Email is required" })}
+                                                className="pl-10 rounded-2xl"
+                                            />
+                                        </div>
+                                        <Button className="w-full h-12 rounded-2xl font-bold shadow-lg shadow-primary/20" type="submit" isLoading={isLoading}>
+                                            Send Reset Link
+                                        </Button>
+                                    </form>
+                                </CardContent>
+                                <CardFooter className="pt-2 pb-8">
+                                    <Link
+                                        href="/auth/login"
+                                        className="flex items-center justify-center w-full text-sm text-muted-foreground hover:text-primary font-bold transition-all"
+                                    >
+                                        <ArrowLeft className="mr-2 h-4 w-4" />
+                                        Back to Login
+                                    </Link>
+                                </CardFooter>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="success"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="p-8 text-center"
+                            >
+                                <div className="inline-flex h-20 w-20 items-center justify-center rounded-[2rem] bg-green-50 text-green-500 mb-6 border-2 border-green-100 shadow-inner">
+                                    <CheckCircle2 className="h-10 w-10" />
                                 </div>
-                                <Button className="w-full mt-2" type="submit" isLoading={isLoading} size="lg">
-                                    Send Reset Link
+                                <CardTitle className="text-2xl font-black mb-2 tracking-tight">Check Your Inbox</CardTitle>
+                                <CardDescription className="text-base font-medium mb-8">
+                                    We've sent a secure link to your email address. Please follow the instructions to reset your password.
+                                </CardDescription>
+                                <Button variant="secondary" className="w-full h-12 rounded-2xl font-bold" asChild>
+                                    <Link href="/auth/login">Return to Sign In</Link>
                                 </Button>
-                            </div>
-                        </form>
-                    ) : (
-                        <Button className="w-full mt-2" variant="outline" asChild>
-                            <Link href="/auth/login">Back to Login</Link>
-                        </Button>
-                    )}
-                </CardContent>
-                {!isSubmitted && (
-                    <CardFooter className="flex flex-col gap-2">
-                        <Link
-                            href="/auth/login"
-                            className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
-                        >
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to Login
-                        </Link>
-                    </CardFooter>
-                )}
-            </Card>
-        </motion.div>
+                                <p className="text-xs text-muted-foreground mt-6 font-medium">
+                                    Didn't receive the email? <span className="text-primary cursor-pointer hover:underline">Resend link</span>
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </Card>
+            </motion.div>
+        </div>
     );
 }

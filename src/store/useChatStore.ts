@@ -1,125 +1,134 @@
 import { create } from 'zustand';
-import { Conversation, Message, User } from '@/types/chat';
-import { ChatService } from '@/services/chat.service';
-import { useAuthStore } from './useAuthStore';
+import api from '@/lib/api';
+
+export interface Message {
+    id: string;
+    conversationId: string;
+    role: 'user' | 'assistant';
+    content: string;
+    createdAt: string;
+}
+
+export interface Conversation {
+    id: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+    messages?: Message[];
+}
 
 interface ChatState {
     conversations: Conversation[];
     activeConversationId: string | null;
+    messages: Record<string, Message[]>;
+    isLoading: boolean;
     isTyping: boolean;
     error: string | null;
 
+    fetchConversations: () => Promise<void>;
+    fetchMessages: (chatId: string) => Promise<void>;
     setActiveConversation: (id: string) => void;
     sendMessage: (content: string) => Promise<void>;
-    addConversation: () => Promise<string>;
+    createConversation: () => Promise<string>;
     clearError: () => void;
 }
 
-const MOCK_CONVERSATIONS: Conversation[] = [
-    {
-        id: 'conv-1',
-        userId: 'user-1',
-        title: 'Refund Request',
-        lastMessageAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-        messages: [
-            {
-                id: 'msg-1',
-                conversationId: 'conv-1',
-                senderId: 'user-1',
-                role: 'user',
-                content: 'Hi, I would like to request a refund for my last order.',
-                createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-            },
-            {
-                id: 'msg-2',
-                conversationId: 'conv-1',
-                senderId: 'bot-1',
-                role: 'assistant',
-                content: 'I can help with that. Could you please provide your order number?',
-                createdAt: new Date(Date.now() - 1000 * 60 * 59).toISOString(),
-            },
-        ],
-    },
-];
-
 export const useChatStore = create<ChatState>((set, get) => ({
-    conversations: MOCK_CONVERSATIONS,
+    conversations: [],
     activeConversationId: null,
+    messages: {},
+    isLoading: false,
     isTyping: false,
     error: null,
 
-    setActiveConversation: (id) => set({ activeConversationId: id, error: null }),
+    fetchConversations: async () => {
+        set({ isLoading: true });
+        try {
+            const response = await api.get('/chats');
+            set({ conversations: response.data, isLoading: false });
+        } catch (error: any) {
+            set({ error: 'Failed to fetch conversations', isLoading: false });
+        }
+    },
+
+    fetchMessages: async (chatId) => {
+        set({ isLoading: true });
+        try {
+            const response = await api.get(`/chats/${chatId}/messages`);
+            set((state) => ({
+                messages: { ...state.messages, [chatId]: response.data },
+                isLoading: false,
+            }));
+        } catch (error: any) {
+            set({ error: 'Failed to fetch messages', isLoading: false });
+        }
+    },
+
+    setActiveConversation: (id) => {
+        set({ activeConversationId: id, error: null });
+        if (!get().messages[id]) {
+            get().fetchMessages(id);
+        }
+    },
+
     clearError: () => set({ error: null }),
 
     sendMessage: async (content) => {
         const { activeConversationId } = get();
-        const currentUser = useAuthStore.getState().user;
-        
-        if (!activeConversationId || !currentUser) {
-            set({ error: 'You must be logged in to send messages.' });
-            return;
-        }
+        if (!activeConversationId) return;
 
-        set({ error: null });
+        const tempId = Date.now().toString();
+        const userMsg: Message = {
+            id: tempId,
+            conversationId: activeConversationId,
+            role: 'user',
+            content,
+            createdAt: new Date().toISOString(),
+        };
+
+        // Optimistic update
+        set((state) => ({
+            messages: {
+                ...state.messages,
+                [activeConversationId]: [...(state.messages[activeConversationId] || []), userMsg],
+            },
+            isTyping: true,
+            error: null,
+        }));
 
         try {
-           const userMsg = await ChatService.sendMessage(activeConversationId, content, currentUser.id);
+            const response = await api.post(`/chats/${activeConversationId}/messages`, { content });
+            const assistantMsg = response.data;
 
             set((state) => ({
-                conversations: state.conversations.map((c) => {
-                    if (c.id === activeConversationId) {
-                        return {
-                            ...c,
-                            messages: [...c.messages, userMsg],
-                            lastMessageAt: userMsg.createdAt,
-                        };
-                    }
-                    return c;
-                }),
-                isTyping: true,
-            }));
-
-            const currentConversations = get().conversations;
-            const activeConv = currentConversations.find(c => c.id === activeConversationId);
-            const history = activeConv ? activeConv.messages : [];
-
-            const aiMsg = await ChatService.getAiResponse(activeConversationId, content, history);
-
-            set((state) => ({
-                conversations: state.conversations.map((c) => {
-                    if (c.id === activeConversationId) {
-                        return {
-                            ...c,
-                            messages: [...c.messages, aiMsg],
-                            lastMessageAt: aiMsg.createdAt,
-                        };
-                    }
-                    return c;
-                }),
+                messages: {
+                    ...state.messages,
+                    [activeConversationId]: [...(state.messages[activeConversationId] || []), assistantMsg],
+                },
                 isTyping: false,
             }));
-        } catch (error) {
-            console.error('Failed to send message', error);
-            set({ isTyping: false, error: 'Failed to send message. Please try again.' });
+        } catch (error: any) {
+            set({ 
+                isTyping: false, 
+                error: error.response?.data?.message || 'Failed to send message' 
+            });
         }
     },
 
-    addConversation: async () => {
-        const currentUser = useAuthStore.getState().user;
-        if (!currentUser) return '';
-
+    createConversation: async () => {
+        set({ isLoading: true });
         try {
-            const newConv = await ChatService.createConversation(currentUser.id);
-            set(state => ({
+            const response = await api.post('/chats');
+            const newConv = response.data;
+            set((state) => ({
                 conversations: [newConv, ...state.conversations],
                 activeConversationId: newConv.id,
-                error: null
+                isLoading: false,
             }));
             return newConv.id;
-        } catch (error) {
-            console.error(error);
-            set({ error: 'Failed to create conversation.' });
+        } catch (error: any) {
+            set({ error: 'Failed to create conversation', isLoading: false });
             return '';
         }
-    }
+    },
 }));

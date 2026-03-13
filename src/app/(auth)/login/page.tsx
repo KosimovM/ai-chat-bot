@@ -34,11 +34,14 @@ export default function LoginPage() {
 
     const onSubmit = async (data: LoginFormValues) => {
         setIsLoading(true);
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        login({ id: "1", name: "User", email: data.email });
-        router.push("/dashboard/chats");
-        setIsLoading(false);
+        try {
+            await login(data);
+            router.push("/dashboard/chats");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (

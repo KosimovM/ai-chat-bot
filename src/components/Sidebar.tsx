@@ -36,14 +36,14 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () =>
 
             <aside
                 className={cn(
-                    "fixed inset-y-0 left-0 w-72 bg-card border-r border-slate-200/60 p-6 flex flex-col z-50 transition-transform duration-500 ease-in-out lg:translate-x-0 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.05)]",
+                    "fixed inset-y-0 left-0 w-72 bg-card border-r border-border/40 p-6 flex flex-col z-50 transition-transform duration-500 ease-in-out lg:translate-x-0 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.05)]",
                     isOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
                 {/* Brand Logo */}
                 <div className="flex items-center gap-3 px-2 mb-12">
-                    <div className="h-11 w-11 rounded-[1.25rem] bg-slate-900 flex items-center justify-center shadow-xl shadow-slate-900/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <Sparkles className="text-white h-6 w-6" />
+                    <div className="h-11 w-11 rounded-[1.25rem] bg-slate-900 dark:bg-slate-100 flex items-center justify-center shadow-xl shadow-slate-900/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <Sparkles className="text-white dark:text-slate-900 h-6 w-6" />
                     </div>
                     <div>
                         <span className="text-xl font-black tracking-tight leading-none block">Antigravity</span>
@@ -100,8 +100,8 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () =>
                 </div>
 
                 {/* Footer Section */}
-                <div className="pt-6 border-t border-slate-100">
-                    <div className="bg-slate-50 p-4 rounded-2xl mb-4 border border-slate-100 group">
+                <div className="pt-6 border-t border-border/50">
+                    <div className="bg-muted/50 p-4 rounded-2xl mb-4 border border-border/50 group">
                         <div className="flex items-center gap-3 mb-3">
                             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                                 <Sparkles className="h-4 w-4 text-primary" />

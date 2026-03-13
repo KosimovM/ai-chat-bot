@@ -1,5 +1,7 @@
 "use client";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
+
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import {
@@ -40,7 +42,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center p-4 bg-slate-50 relative overflow-hidden">
+        <div className="min-h-screen w-full flex items-center justify-center p-4 bg-background relative overflow-hidden">
             {/* Background Decorations */}
             <div className="absolute top-0 left-0 -mt-24 -ml-24 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
             <div className="absolute bottom-0 right-0 -mb-24 -mr-24 h-96 w-96 rounded-full bg-indigo-500/5 blur-3xl" />
@@ -57,9 +59,12 @@ export default function LoginPage() {
                     </div>
                     <h1 className="text-3xl font-black tracking-tighter text-slate-900">Welcome Back</h1>
                     <p className="text-muted-foreground font-medium mt-2">Log in to manage your AI workspace</p>
+                    <div className="flex flex-col items-center">
+                        <ThemeToggle />
+                    </div>
                 </div>
 
-                <Card className="border-none shadow-2xl shadow-black/5 bg-white/80 backdrop-blur-xl">
+                <Card className="border-none shadow-2xl shadow-black/10 bg-card/80 backdrop-blur-xl">
                     <CardHeader className="space-y-1 pb-4">
                         <CardTitle className="text-xl font-bold">Sign In</CardTitle>
                         <CardDescription>
@@ -116,20 +121,20 @@ export default function LoginPage() {
 
                         <div className="relative my-6">
                             <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t border-slate-200" />
+                                <span className="w-full border-t border-border/50" />
                             </div>
                             <div className="relative flex justify-center text-xs uppercase font-bold tracking-widest">
-                                <span className="bg-white px-3 text-muted-foreground">
+                                <span className="bg-background px-3 text-muted-foreground">
                                     Or Continue With
                                 </span>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <Button variant="secondary" className="rounded-xl h-11 transition-all hover:bg-slate-100" type="button" disabled={isLoading}>
+                            <Button variant="secondary" className="rounded-xl h-11 transition-all hover:bg-muted" type="button" disabled={isLoading}>
                                 <Github className="h-4 w-4 mr-2" /> Github
                             </Button>
-                            <Button variant="secondary" className="rounded-xl h-11 transition-all hover:bg-slate-100" type="button" disabled={isLoading}>
+                            <Button variant="secondary" className="rounded-xl h-11 transition-all hover:bg-muted" type="button" disabled={isLoading}>
                                 <Chrome className="h-4 w-4 mr-2" /> Google
                             </Button>
                         </div>

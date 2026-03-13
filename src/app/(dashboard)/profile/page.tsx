@@ -56,7 +56,7 @@ export default function ProfilePage() {
             <div className="flex flex-col lg:flex-row gap-10">
                 {/* Navigation Sidebar */}
                 <div className="w-full lg:w-72 shrink-0 space-y-4">
-                    <Card className="border-none shadow-xl shadow-black/5 bg-white/50 backdrop-blur-sm overflow-hidden p-2">
+                    <Card className="border-none shadow-xl shadow-black/5 bg-card/50 backdrop-blur-sm overflow-hidden p-2">
                         <div className="space-y-1">
                             {tabs.map((tab) => {
                                 const Icon = tab.icon;
@@ -79,7 +79,7 @@ export default function ProfilePage() {
                                 );
                             })}
                         </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 px-2 pb-2">
+                        <div className="mt-4 pt-4 border-t border-border/40 px-2 pb-2">
                             <Button
                                 variant="ghost"
                                 className="w-full justify-start gap-3 rounded-2xl text-destructive hover:bg-destructive/10 h-12 font-bold px-4"
@@ -95,7 +95,7 @@ export default function ProfilePage() {
                         <div className="absolute top-0 right-0 -mr-10 -mt-10 h-32 w-32 bg-primary/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
                         <h4 className="font-bold relative z-10">Pro Plan</h4>
                         <p className="text-xs text-slate-400 mt-1 mb-4 relative z-10">Unlock all features</p>
-                        <Button className="w-full h-10 rounded-xl bg-white text-slate-900 hover:bg-slate-100 font-bold relative z-10 transition-all active:scale-95">
+                        <Button className="w-full h-10 rounded-xl bg-white text-slate-900 hover:bg-slate-100 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-bold relative z-10 transition-all active:scale-95">
                             Upgrade <ExternalLink className="ml-2 h-4 w-4" />
                         </Button>
                     </Card>
@@ -121,7 +121,7 @@ export default function ProfilePage() {
                                         {/* Avatar Section */}
                                         <div className="flex flex-col sm:flex-row items-center gap-8 bg-muted/30 p-6 rounded-[2rem] border border-border/50">
                                             <div className="relative group">
-                                                <div className="h-28 w-28 rounded-[2.5rem] bg-background border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105">
+                                                <div className="h-28 w-28 rounded-[2.5rem] bg-background border-4 border-background shadow-2xl flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105">
                                                     <span className="text-4xl font-black text-primary/30 select-none">
                                                         {user.name.charAt(0).toUpperCase()}
                                                     </span>
@@ -129,7 +129,7 @@ export default function ProfilePage() {
                                                         <Camera className="text-white h-8 w-8 scale-75 group-hover:scale-100 transition-transform duration-500" />
                                                     </div>
                                                 </div>
-                                                <div className="absolute -bottom-2 -right-2 h-10 w-10 bg-white shadow-xl rounded-2xl flex items-center justify-center text-primary cursor-pointer hover:bg-slate-50 transition-colors">
+                                                <div className="absolute -bottom-2 -right-2 h-10 w-10 bg-background shadow-xl rounded-2xl flex items-center justify-center text-primary cursor-pointer hover:bg-muted transition-colors border border-border/50">
                                                     <Camera className="h-5 w-5" />
                                                 </div>
                                             </div>
@@ -169,7 +169,7 @@ export default function ProfilePage() {
                                             />
                                         </div>
                                     </CardContent>
-                                    <CardFooter className="p-8 bg-slate-50/50 flex items-center justify-between border-t border-slate-100">
+                                    <CardFooter className="p-8 bg-muted/20 flex items-center justify-between border-t border-border/40">
                                         <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest hidden sm:block">Last updated: Today at 2:30 PM</p>
                                         <Button 
                                             onClick={handleSave} 
@@ -212,12 +212,12 @@ export default function ProfilePage() {
                                             </div>
                                         </div>
 
-                                        <div className="pt-6 border-t border-slate-100">
+                                        <div className="pt-6 border-t border-border/40">
                                             <h4 className="font-bold mb-4 flex items-center gap-2">
                                                 Two-Factor Authentication
                                                 <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase tracking-tighter">Recommended</span>
                                             </h4>
-                                            <div className="flex items-center justify-between p-6 bg-slate-50 rounded-[1.5rem] border border-slate-200/50">
+                                            <div className="flex items-center justify-between p-6 bg-muted/30 rounded-[1.5rem] border border-border/40">
                                                 <div className="space-y-1">
                                                     <p className="font-bold text-sm">Authenticator App</p>
                                                     <p className="text-xs text-muted-foreground font-medium">Use apps like Google Authenticator or Authy.</p>
@@ -226,7 +226,7 @@ export default function ProfilePage() {
                                             </div>
                                         </div>
                                     </CardContent>
-                                    <CardFooter className="p-8 bg-slate-50/50 border-t border-slate-100">
+                                    <CardFooter className="p-8 bg-muted/20 border-t border-border/40">
                                         <Button onClick={handleSave} isLoading={isLoading} className="rounded-2xl h-12 px-10 font-bold w-full sm:w-auto">Update Security</Button>
                                     </CardFooter>
                                 </Card>
@@ -243,7 +243,7 @@ export default function ProfilePage() {
                                             More settings coming soon in the next update...
                                         </div>
                                     </CardContent>
-                                    <CardFooter className="p-8 bg-slate-50/50 border-t border-slate-100 flex justify-end">
+                                    <CardFooter className="p-8 bg-muted/20 border-t border-border/40 flex justify-end">
                                         <Button disabled className="rounded-2xl h-12 px-10 font-bold">Save Settings</Button>
                                     </CardFooter>
                                 </Card>

@@ -129,7 +129,7 @@ export default function ChatsPage() {
                         </div>
 
                         {/* Messages List */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-2 custom-scrollbar bg-slate-50/30">
+                        <div className="flex-1 overflow-y-auto p-6 space-y-2 custom-scrollbar bg-muted/20">
                             {activeConversation.messages.map((msg) => (
                                 <ChatMessage key={msg.id} message={msg} />
                             ))}

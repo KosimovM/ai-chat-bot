@@ -1,5 +1,7 @@
 "use client";
 
+import { ThemeToggle } from "@/components/ThemeToggle";
+
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useState } from "react";
@@ -33,7 +35,7 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center p-4 bg-slate-50 relative overflow-hidden">
+        <div className="min-h-screen w-full flex items-center justify-center p-4 bg-background relative overflow-hidden">
             {/* Background Decorations */}
             <div className="absolute top-0 left-0 -mt-24 -ml-24 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
             <div className="absolute bottom-0 right-0 -mb-24 -mr-24 h-96 w-96 rounded-full bg-indigo-500/5 blur-3xl" />
@@ -44,15 +46,18 @@ export default function ForgotPasswordPage() {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-full max-w-md relative z-10"
             >
-                <div className="text-center mb-8">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-xl shadow-primary/20 mb-4">
-                        <Sparkles className="text-primary-foreground h-6 w-6" />
+                <div className="text-center mb-8 flex flex-col items-center">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 dark:bg-slate-100 shadow-xl shadow-slate-900/20 mb-4">
+                        <Sparkles className="text-white dark:text-slate-900 h-6 w-6" />
                     </div>
-                    <h1 className="text-3xl font-black tracking-tighter text-slate-900">Reset Password</h1>
+                    <h1 className="text-3xl font-black tracking-tighter text-foreground">Reset Password</h1>
                     <p className="text-muted-foreground font-medium mt-2">No worries, we'll help you get back in</p>
+                    <div className="mt-2">
+                        <ThemeToggle />
+                    </div>
                 </div>
 
-                <Card className="border-none shadow-2xl shadow-black/5 bg-white/80 backdrop-blur-xl">
+                <Card className="border-none shadow-2xl shadow-black/10 bg-card/80 backdrop-blur-xl">
                     <AnimatePresence mode="wait">
                         {!isSubmitted ? (
                             <motion.div

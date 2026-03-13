@@ -12,7 +12,7 @@ export function Topbar({ onMenuClick, isMenuOpen }: { onMenuClick?: () => void; 
     const currentUser = useAuthStore((state) => state.user);
 
     return (
-        <header className="h-20 border-b border-slate-200/60 bg-white/80 backdrop-blur-xl px-6 sm:px-10 flex items-center justify-between sticky top-0 z-40 transition-all">
+        <header className="h-20 border-b border-border/40 bg-background/80 backdrop-blur-xl px-6 sm:px-10 flex items-center justify-between sticky top-0 z-40 transition-all">
             <div className="flex items-center gap-6 flex-1">
                 <Button
                     variant="ghost"
@@ -24,7 +24,7 @@ export function Topbar({ onMenuClick, isMenuOpen }: { onMenuClick?: () => void; 
                 </Button>
 
                 {/* Search Bar / Command K */}
-                <div className="hidden md:flex items-center bg-slate-100/80 border border-slate-200/20 rounded-2xl px-4 py-2.5 w-full max-w-md group focus-within:bg-white focus-within:ring-4 focus-within:ring-primary/10 transition-all duration-300">
+                <div className="hidden md:flex items-center bg-muted/50 border border-border/40 rounded-2xl px-4 py-2.5 w-full max-w-md group focus-within:bg-card focus-within:ring-4 focus-within:ring-primary/10 transition-all duration-300">
                     <Search className="h-4 w-4 text-muted-foreground mr-3 group-focus-within:text-primary transition-colors" />
                     <input
                         placeholder="Search conversations, files, or tasks..."
@@ -39,9 +39,9 @@ export function Topbar({ onMenuClick, isMenuOpen }: { onMenuClick?: () => void; 
 
             <div className="flex items-center gap-3 sm:gap-6">
                 <div className="hidden sm:flex items-center gap-2 pr-4 border-r border-slate-200 transition-colors">
-                    <Button variant="ghost" size="icon" className="relative rounded-xl h-11 w-11 hover:bg-slate-100 transition-all">
-                        <Bell className="h-5 w-5 text-slate-600" />
-                        <span className="absolute top-3 right-3 h-2 w-2 bg-primary rounded-full border-2 border-white shadow-[0_0_10px_rgba(79,70,229,0.5)]" />
+                    <Button variant="ghost" size="icon" className="relative rounded-xl h-11 w-11 hover:bg-muted transition-all">
+                        <Bell className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
+                        <span className="absolute top-3 right-3 h-2 w-2 bg-primary rounded-full border-2 border-background shadow-[0_0_10px_rgba(79,70,229,0.5)]" />
                     </Button>
                     <ThemeToggle />
                 </div>
@@ -56,17 +56,17 @@ export function Topbar({ onMenuClick, isMenuOpen }: { onMenuClick?: () => void; 
                             </div>
                         </div>
                         <div className="relative">
-                            <div className="h-11 w-11 rounded-2xl bg-slate-900 flex items-center justify-center overflow-hidden border-2 border-white shadow-xl shadow-black/5 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
+                            <div className="h-11 w-11 rounded-2xl bg-slate-900 dark:bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-background shadow-xl shadow-black/5 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
                                 {currentUser.avatarUrl ? (
                                     <img src={currentUser.avatarUrl} alt={currentUser.name} className="h-full w-full object-cover" />
                                 ) : (
-                                    <span className="text-white font-black text-sm">
+                                    <span className="text-white dark:text-slate-900 font-black text-sm">
                                         {currentUser.name.charAt(0).toUpperCase()}
                                     </span>
                                 )}
                             </div>
-                            <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-white rounded-lg shadow-md border border-slate-100 flex items-center justify-center">
-                                <ChevronDown className="h-3 w-3 text-slate-600 group-hover:text-primary transition-colors" />
+                            <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-background rounded-lg shadow-md border border-border/50 flex items-center justify-center">
+                                <ChevronDown className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
                             </div>
                         </div>
                     </Link>

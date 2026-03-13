@@ -8,6 +8,7 @@ import { Send, MessageCircle, X, Sparkles, Minus, Maximize2 } from 'lucide-react
 import { useForm } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuthStore } from '@/store/useAuthStore';
 
 interface ChatInputForm {
     message: string;
@@ -20,9 +21,9 @@ export function ChatWidget() {
         activeConversationId,
         sendMessage,
         addConversation,
-        currentUser,
         isTyping
     } = useChatStore();
+    const currentUser = useAuthStore(state => state.user);
 
     React.useEffect(() => {
         if (isOpen && !activeConversationId && currentUser) {

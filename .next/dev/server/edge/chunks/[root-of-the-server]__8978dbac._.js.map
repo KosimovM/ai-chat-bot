@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 16, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/middleware.ts"],"sourcesContent":["import { NextResponse } from 'next/server';\nimport type { NextRequest } from 'next/server';\n\nexport function middleware(request: NextRequest) {\n  const { pathname } = request.nextUrl;\n  \n  // Basic session check - in a real app this would check a cookie or header\n  // For this MVP, we use the existence of an 'auth-storage' cookie (set by zustand persist if configured, \n  // though zustand uses localStorage by default. For SSR middleware, we'd need a cookie).\n  // SINCE we are using client-side Zustand, middleware won't easily see localStorage.\n  // So for this MVP, we'll keep it simple and skip complex middleware to avoid hydration loops \n  // UNLESS we move auth to cookies.\n  \n  return NextResponse.next();\n}\n\nexport const config = {\n  matcher: ['/dashboard/:path*', '/profile'],\n};\n"],"names":[],"mappings":";;;;;;AAAA;AAAA;;AAGO,SAAS,WAAW,OAAoB;IAC7C,MAAM,EAAE,QAAQ,EAAE,GAAG,QAAQ,OAAO;IAEpC,0EAA0E;IAC1E,yGAAyG;IACzG,wFAAwF;IACxF,oFAAoF;IACpF,8FAA8F;IAC9F,kCAAkC;IAElC,OAAO,gMAAY,CAAC,IAAI;AAC1B;AAEO,MAAM,SAAS;IACpB,SAAS;QAAC;QAAqB;KAAW;AAC5C"}}]
+}

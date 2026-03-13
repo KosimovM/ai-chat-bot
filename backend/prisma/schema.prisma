@@ -21,8 +21,8 @@ model User {
 
 model Conversation {
   id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
   messages  Message[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

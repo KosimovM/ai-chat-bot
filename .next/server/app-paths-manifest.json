@@ -1,0 +1,14 @@
+{
+  "/(auth)/forgot-password/page": "app/(auth)/forgot-password/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/register/page": "app/(auth)/register/page.js",
+  "/(auth)/reset-password/[token]/page": "app/(auth)/reset-password/[token]/page.js",
+  "/(dashboard)/dashboard/chats/page": "app/(dashboard)/dashboard/chats/page.js",
+  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
+  "/(dashboard)/profile/page": "app/(dashboard)/profile/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/chat/route": "app/api/chat/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
+}

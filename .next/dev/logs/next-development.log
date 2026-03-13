@@ -1,0 +1,6 @@
+[00:00:01.648] Server  WARN    ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:01.799] Server  LOG     ✓ Ready in 1370ms
+[00:00:16.647] Browser ERROR   uncaughtError: TypeError: addConversation is not a function. (In 'addConversation()', 'addConversation' is undefined)
+[00:00:24.395] Browser ERROR   uncaughtError: TypeError: addConversation is not a function. (In 'addConversation()', 'addConversation' is undefined)
+[00:00:25.045] Browser ERROR   uncaughtError: TypeError: addConversation is not a function. (In 'addConversation()', 'addConversation' is undefined)
+[00:01:13.844] Server  LOG       Reload env: .env.local

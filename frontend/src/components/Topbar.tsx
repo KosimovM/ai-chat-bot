@@ -57,8 +57,8 @@ export function Topbar({ onMenuClick, isMenuOpen }: { onMenuClick?: () => void; 
                         </div>
                         <div className="relative">
                             <div className="h-11 w-11 rounded-2xl bg-slate-900 dark:bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-background shadow-xl shadow-black/5 group-hover:scale-110 group-hover:shadow-primary/20 transition-all duration-300">
-                                {currentUser.avatarUrl ? (
-                                    <img src={currentUser.avatarUrl} alt={currentUser.name} className="h-full w-full object-cover" />
+                                {currentUser.avatar ? (
+                                    <img src={currentUser.avatar} alt={currentUser.name} className="h-full w-full object-cover" />
                                 ) : (
                                     <span className="text-white dark:text-slate-900 font-black text-sm">
                                         {currentUser.name.charAt(0).toUpperCase()}

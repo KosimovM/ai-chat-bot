@@ -29,15 +29,17 @@ AI Chat Bot — веб-барнома барои гуфтугӯ бо ассис�
 ```bash
 git clone https://github.com/KosimovM/ai-chat-bot.git
 cd ai-chat-bot
+
 npm install
 ▶️ Run Project
 npm run dev
+
 Open in browser:
 http://localhost:3000
+
 👨‍💻 Author
 KosimovM
 GitHub: https://github.com/KosimovM
-
 
 - README **10× professional GitHub style**
 - README **стартап SaaS level**
